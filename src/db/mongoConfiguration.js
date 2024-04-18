@@ -4,10 +4,10 @@ dotenv.config();
 
 async function connectLocally() {
     const dbName = 'planemerg' // solo cambiar este string si se requiere cambiar base de datos
-    const connectionString = `mongodb://localhost:27017/${dbName}`;  // Database name is still 'SAGNIRIB'
+    const connectionString = `mongodb://localhost:27017/${dbName}`;
     try {
         await mongoose.connect(connectionString);
-        console.log('💾 Connected to MongoDB on localhost 📚📚📚📚📚📚📚📚📚📚');
+        console.log('💾 Conectado a la base de datos EXITOSAMENTE 📚📚📚📚📚📚📚📚📚📚');
     } catch (error) {
         console.error('Error connecting to MongoDB:', error.message);
     }
