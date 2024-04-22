@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const {json, urlencoded} = require("express");
 const routeController = require("./src/controllers/routeController")
+const {populateDBWithQuestions} = require("./src/domain/questions/syncQuestions");
 
 
 async function createServer() {
@@ -11,13 +12,15 @@ async function createServer() {
     app.use(json());
     app.use(urlencoded({ extended: true }));
     // Set up CORS if needed
-    app.use(cors());
+    app.use(cors({}));
     // Set up your API endpoints here
-    app.use('/api', routeController); // Make sure your routeController is properly set up for REST API endpoints
+    app.use('/api', routeController);
     const port = process.env.PORT || 4400;
     const server = http.createServer(app);
-    server.listen(port, () => {
+    server.listen(port, async () => {
         console.log(`🚀 Server ready at http://localhost:${port}/api`);
+        await populateDBWithQuestions()
+
     });
 }
 

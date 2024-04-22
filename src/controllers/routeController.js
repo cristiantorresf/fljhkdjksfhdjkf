@@ -1,75 +1,44 @@
 const express = require('express');
-const AnalisisRiesgoEntity = require('../db/models/analisisRiesgoEntity'); // Replace './evaluationModel' with the actual path to your model
+
+const ResponsesController = require('./responsesController');
+const PreguntasController = require('./preguntasController')
+const UsersController = require("./userController");
 
 const router = express.Router();
 
-// CREATE a new evaluation
-router.post('/evaluations', async (req, res) => {
-    try {
-        const evaluation = new AnalisisRiesgoEntity(req.body);
-        const savedEvaluation = await evaluation.save();
-        res.status(201).json(savedEvaluation);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
+// Get all responses
+router.get('/respuestas', ResponsesController.getResponses);
 
-// READ all evaluations
-router.get('/evaluations', async (req, res) => {
-    try {
-        const evaluations = await AnalisisRiesgoEntity.find();
-        res.json(evaluations);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// Get a single response by id
+router.get('/respuestas/:id', ResponsesController.getResponseById);
 
-// READ a single evaluation by ID
-router.get('/evaluations/:id', async (req, res) => {
-    try {
-        const evaluation = await AnalisisRiesgoEntity.findById(req.params.id);
-        if (evaluation) {
-            res.json(evaluation);
-        } else {
-            res.status(404).json({ message: 'AnalisisRiesgoEntity not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// obtener respuestas del usuario 🤪🤪
+router.get('/respuesta/usuario/:id', ResponsesController.getUserResponses);
 
-// UPDATE an evaluation by ID
-router.put('/evaluations/:id', async (req, res) => {
-    try {
-        const evaluation = await AnalisisRiesgoEntity.findById(req.params.id);
-        if (evaluation) {
-            evaluation.set(req.body);
-            const updatedEvaluation = await evaluation.save();
-            res.json(updatedEvaluation);
-        } else {
-            res.status(404).json({ message: 'AnalisisRiesgoEntity not found' });
-        }
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
+// Create a new response
+router.post('/respuestas', ResponsesController.createResponse);
 
-// DELETE an evaluation by ID
-router.delete('/evaluations/:id', async (req, res) => {
-    try {
-        const idRecibo = req.params.id
-        console.log("🚀 idRecibo >>", idRecibo)
-        const evaluation = await AnalisisRiesgoEntity.findByIdAndDelete(idRecibo)
-        console.log("🚀 evaluation >>", evaluation)
-        if (evaluation) {
+// Update an existing response
+router.put('/respuestas/:id', ResponsesController.updateResponse);
 
-            res.json({ message: 'AnalisisRiesgoEntity deleted', encontrado:evaluation });
-        } else {
-            res.status(404).json({ message: 'AnalisisRiesgoEntity not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+// Delete a response
+router.delete('/respuestas/:id', ResponsesController.deleteResponse);
+
+// Obtener Preguntas
+router.get('/preguntas', PreguntasController.getAllQuestions )
+
+router.get('/preguntas/person', PreguntasController.getPersonQuestions )
+router.get('/preguntas/resource', PreguntasController.getResourcesQuestion )
+router.get('/preguntas/syspros', PreguntasController.getSystemProcessQuestions )
+
+router.get('healthcheck', (req,res,next) => res.send('OK').status(200))
+
+router.post('/users/register', UsersController.registerUser)
+router.post('/users/login', UsersController.loginUser)
+
+router.get('/users/', UsersController.getAllUsers)
+router.get('/users/:id', UsersController.getUserById)
+
+router.delete('/users/:id', UsersController.deleteUser)
 
 module.exports = router;
