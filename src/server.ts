@@ -1,10 +1,11 @@
-const http = require('http');
-const { connectMongoDB } = require('./src/db/mongoConfiguration');
-const express = require('express');
-const cors = require('cors');
-const {json, urlencoded} = require("express");
-const routeController = require("./src/controllers/routeController")
-const {populateDBWithQuestions} = require("./src/domain/questions/syncQuestions");
+import express, { json, urlencoded } from 'express';
+import cors from 'cors';
+import http from 'http';
+
+// Custom module imports.
+import { connectMongoDB } from './db/mongoConfiguration';
+import { populateDBWithQuestions } from './domain/questions/syncQuestions';
+import routeController from "./controllers/routeController";
 
 
 async function createServer() {

@@ -1,6 +1,6 @@
 const {QuestionModel} = require("../db/colections/preguntasCollection");
 
-class PreguntasController {
+export class PreguntasController {
     static async getAllQuestions(req, res) {
         try {
             const questions = await QuestionModel.find({})
@@ -48,4 +48,4 @@ class PreguntasController {
     }
 }
 
-module.exports = PreguntasController
+

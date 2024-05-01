@@ -1,11 +1,14 @@
-const express = require('express');
+import express from "express";
 
-const ResponsesController = require('./responsesController');
-const PreguntasController = require('./preguntasController')
-const UsersController = require("./userController");
+import {ResponsesController} from "./responsesController";
+
+import {PreguntasController} from "./preguntasController";
+
+import {UsersController} from "./userController";
 
 const router = express.Router();
 
+router.get('/healthcheck', (req,res,next) => res.send('OK').status(200))
 // Get all responses
 router.get('/respuestas', ResponsesController.getResponses);
 
@@ -31,7 +34,15 @@ router.get('/preguntas/person', PreguntasController.getPersonQuestions )
 router.get('/preguntas/resource', PreguntasController.getResourcesQuestion )
 router.get('/preguntas/syspros', PreguntasController.getSystemProcessQuestions )
 
-router.get('healthcheck', (req,res,next) => res.send('OK').status(200))
+// el frontend solo usara estos dos endpoints
+
+//El estado del respuesta 🥸🥸🥸🥸🥸🥸🥸🥸
+router.post('/respuestas/state', (req,res) => new ResponsesController().resolverEstadoTablas(req, res))
+
+// publicar la respuesta actualizar o crear si corresponde 😍😍😍😍
+router.post('/respuestas/publicar', (req, res) => new ResponsesController().publicarRespuestas(req, res))
+
+
 
 router.post('/users/register', UsersController.registerUser)
 router.post('/users/login', UsersController.loginUser)
@@ -41,4 +52,4 @@ router.get('/users/:id', UsersController.getUserById)
 
 router.delete('/users/:id', UsersController.deleteUser)
 
-module.exports = router;
+export default router

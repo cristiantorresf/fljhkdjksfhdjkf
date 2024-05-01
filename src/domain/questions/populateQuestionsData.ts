@@ -1,6 +1,7 @@
-const {QuestionModel} = require('../../db/colections/preguntasCollection')
+import {QuestionModel} from "../../db/colections/preguntasCollection";
 
-class PopulateQuestionsData {
+
+export class PopulateQuestionsData {
     async populatePersonsTable(){
         const personsQuestions = [
             {
@@ -129,8 +130,4 @@ class PopulateQuestionsData {
             console.log("🚀TODO BIEN 😇",)
         }
     }
-}
-
-module.exports = {
-    PopulateQuestionsData
 }

@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
+
 const { Schema } = mongoose;
 
 const evaluationSchema = new Schema({
@@ -32,6 +33,4 @@ const evaluationSchema = new Schema({
     }],
 });
 
-const Evaluation = mongoose.model('Evaluation', evaluationSchema);
-
-module.exports = Evaluation;
+export const Evaluation = mongoose.model('Evaluation', evaluationSchema);

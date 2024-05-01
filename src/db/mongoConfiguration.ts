@@ -1,5 +1,7 @@
-const mongoose = require('mongoose')
-const dotenv = require('dotenv');
+import dotenv from "dotenv";
+
+import mongoose from "mongoose";
+
 dotenv.config();
 
 async function connectLocally() {
@@ -13,7 +15,7 @@ async function connectLocally() {
     }
 }
 
-async function connectMongoDB() {
+export async function connectMongoDB() {
     const username = process.env.DB_USERNAME
     if (!username) {
         console.log("🚀 intentando conectarse localmente a la bae de datos 😽 >>")
@@ -26,11 +28,7 @@ async function connectMongoDB() {
     const configuration = {
         authMechanism: 'DEFAULT',
         authSource: 'admin'
-    }
+    } as any
     await mongoose.connect(connectionString, configuration)
     console.log('💾 Connected to MongoDB 📚📚📚📚📚📚📚📚📚📚')
-}
-
-module.exports = {
-    connectMongoDB
 }

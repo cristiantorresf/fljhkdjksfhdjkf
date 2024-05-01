@@ -1,7 +1,8 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
-class AuthService {
+import bcrypt from "bcrypt";
+
+export class AuthService {
     async login(dbPassword, requestPassword, email, username) {
         console.log("🚀 {dbPassword,requestPassword,email,username} >>", {dbPassword,requestPassword,email,username})
         const isCorrectCredentials = await this.comparePasswords(requestPassword, dbPassword);
@@ -27,5 +28,3 @@ class AuthService {
         return jwt.sign(payload, secretKey, { expiresIn: '1h' })
     }
 }
-
-module.exports = {AuthService}

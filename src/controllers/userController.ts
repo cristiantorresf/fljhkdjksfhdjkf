@@ -1,7 +1,9 @@
-const {UsersModel} = require("../db/colections/usersCollection");
-const {AuthService} = require("../services/authService");
+import {UsersModel} from "../db/colections/usersCollection";
 
-class UsersController {
+import {AuthService} from "../services/authService";
+
+
+export class UsersController {
     static async getAllUsers(req, res) {
         try {
             const users = await UsersModel.find({})
@@ -14,6 +16,7 @@ class UsersController {
 
     static async getUserById(req, res) {
         try {
+            const id = req.params.id;
             const user = await UsersModel.findOne({id: id.req.params.id})
             if (user) return res.json(user)
             if (!user) return res.send('No Hay Usuario 🐒')
@@ -83,4 +86,4 @@ class UsersController {
     }
 }
 
-module.exports = UsersController
+
