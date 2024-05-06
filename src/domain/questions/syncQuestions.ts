@@ -4,6 +4,7 @@ import {PopulateQuestionsData} from './populateQuestionsData';
 
 export async function populateDBWithQuestions() {
     const populate = new PopulateQuestionsData();
+    await populate.clearRecords();
     await populate.populatePersonsTable();
     await populate.populateResourcesTable();
     await populate.populateSystemsProcess();

@@ -9,7 +9,8 @@ type SingleQuestion = {
 }
 export interface IQuestions {
     type: string;
-    questions: SingleQuestion[]
+    questions: SingleQuestion[];
+    _id?: string;
 }
 
 const questionSchema = new Schema<IQuestions>({

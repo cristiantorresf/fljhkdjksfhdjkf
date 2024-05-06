@@ -2,6 +2,7 @@ import {IResponses, ResponsesModel} from "../db/colections/respuestasCollection"
 import {IQuestions, QuestionModel} from "../db/colections/preguntasCollection";
 import { Request, Response } from 'express';
 import mongoose from "mongoose";
+import {UsersModel} from "../db/colections/usersCollection";
 
 
 export type FrontendPublishResponse = {
@@ -18,6 +19,7 @@ export class ResponsesController {
                     answer: 'NO',
                     score: 0,
                     observation: 'Sin observacion',
+                    questionType: cadaElemento.questionType,
                     _id: cadaElemento._id,
                 };
             },
@@ -48,16 +50,17 @@ export class ResponsesController {
             if (response) {
                 return res.json({
                     questions: this.transformarResponse(response.answers),
-                    questionId: questionTypeRequest,
+                    tableType: questionTypeRequest,
+                    questionId: questionResponse._id,
                     userId,
                 });
             }
             if (!response) {
-               return this.noHayRespuestaEnviarPreguntas(res, questionResponse._id, userId)
+               return this.noHayRespuestaEnviarPreguntas(res, questionResponse, userId)
             }
             return res.json({message: 'testing'})
         } catch (error) {
-            return this.noHayRespuestaEnviarPreguntas(res, questionResponse._id, userId)
+            return this.noHayRespuestaEnviarPreguntas(res, questionResponse, userId)
         }
     }
 
@@ -131,28 +134,32 @@ export class ResponsesController {
         }
     }
 
-    private async noHayRespuestaEnviarPreguntas(res: Response, questionId: mongoose.Types.ObjectId, userId: String) {
-        if (!questionId) return res.status(404).json({message: 'Question not found'});
-        const questionsResponse = await QuestionModel.findById(questionId).exec()
+    private async noHayRespuestaEnviarPreguntas(res: Response, questionResponse: IQuestions, userId: String) {
         return res.json({
-            questions: this.transformarQuestionsResponse(questionsResponse.questions),
-            questionId: questionsResponse._id,
+            questions: this.transformarQuestionsResponse(questionResponse.questions),
+            questionId: questionResponse._id,
             userId,
         });
     }
 
     async tranformPublishReponseData(data: FrontendPublishResponse){
-        const { questions, userId} = data
-        const questionId = await QuestionModel.findOne({type: data.questionId}) || data.questionId
+        const { questions, userId } = data
+        const table = await QuestionModel.findById(data.questionId)
+        const user = await UsersModel.findById(userId)
+        if (!table) {
+            throw new Error(`No hay tabla ${data?.questionId}`)
+        }
         return {
-            questionId,
+            questionId: table._id,
             userId,
             answers: questions,
+            tableType: table.type,
+            userName: user.username
         }
     }
 
     async publicarRespuestas(req:Request, res: Response) {
-        const {userId, questionId, answers} = await this.tranformPublishReponseData(req.body);
+        const {userId, questionId, answers, tableType, userName} = await this.tranformPublishReponseData(req.body);
 
         if (!userId || !questionId || !answers) {
             return res.json({error:"🤬🤬🤬🤬🤬🤬🤬🤬🤬🤬 mande la data bien ijuemadre vida como quiere que consulte la base de datos sin la data bien"})
@@ -163,11 +170,13 @@ export class ResponsesController {
             if (response) {
                 // update the document given the userId and questionId
                 response.answers = answers;
+                response.userName = userName;
+                response.tableType = tableType;
                 await response.save();
                 return res.status(200).json(response);
             } else {
                 // create a brand new document with the given userId, questionId and answers
-                const newResponse = new ResponsesModel({userId, questionId, answers});
+                const newResponse = new ResponsesModel({userId, questionId, answers, tableType, userName});
                 const savedResponse = await newResponse.save();
                 return res.status(200).json(savedResponse);
             }

@@ -2,6 +2,13 @@ import {QuestionModel} from "../../db/colections/preguntasCollection";
 
 
 export class PopulateQuestionsData {
+    constructor(){
+         console.log("🚀 Attempting to sync DataBase >>")
+    }
+
+    async clearRecords(){
+        return QuestionModel.deleteMany();
+    }
     async populatePersonsTable(){
         const personsQuestions = [
             {
@@ -12,23 +19,23 @@ export class PopulateQuestionsData {
             {
                 name: '¿Se promueve y se practica activamente con los funcionarios y colaboradores' +
                     'el programa de preparación para emergencia?',
-                questionType: 'gestion de colaboradores'
+                questionType: 'gestion organizacional'
             },
             {
                 name: '¿Existe un esquema organizacional para la respuesta a emergencias con' +
                     'funciones y responsables asignados (Brigadas, Sistema Comando de' +
                     'incidentes - SCI, entre otros) y se mantiene actualizado?',
-                questionType: 'gestion de emergencias'
+                questionType: 'gestion organizacional'
             },
             {
                 name: '¿Existen instrumentos o formatos, folletos como material de difusión en temas' +
                     'de prevención y control de emergencias?',
-                questionType: 'materiales de difusion'
+                questionType: 'gestion organizacional'
             },
             {
                 name: '¿Existe una brigada de emergencia o en su defecto algún integrante de la' +
                     'misma dentro de la sede?',
-                questionType: 'existencia de brigada'
+                questionType: 'gestion organizacional'
             }
         ]
 
